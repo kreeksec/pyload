@@ -4,6 +4,7 @@ import base64
 import re
 import json
 
+from urllib.parse import urlparse
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
@@ -206,7 +207,8 @@ class CriptTo(SimpleDecrypter):
                     inputs["button.y"] = captcha_code[1]
                     html = self.load(url, post=inputs)
                     link = self.last_header["url"]
-                    if not link.startswith("https://cript.to"):
+                    host = urlparse(link).hostname
+                    if not (host == "cript.to" or (host and host.endswith(".cript.to"))):
                         self.captcha.correct()
                         break
 
